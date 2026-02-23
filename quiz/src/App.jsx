@@ -8,6 +8,9 @@ function App() {
 
   return (
     <>
+    <div className='bg-blue-50'>
+      Hello bimal
+    </div>
       HIii
     </>
   )
