@@ -182,7 +182,7 @@ const QuizTakePage = () => {
           {/* Progress Bar */}
           <div className={`relative h-3 ${colors.bgTertiary} rounded-full overflow-hidden`}>
             <div
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500 ease-out"
+              className="absolute inset-y-0 left-0 bg-linear-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
             />
             <div className="absolute inset-0 flex items-center justify-center">
@@ -226,7 +226,7 @@ const QuizTakePage = () => {
               Next <ChevronRight size={18} />
             </Button>
           ) : (
-            <Button onClick={handleSubmitQuiz} disabled={submitting} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+            <Button onClick={handleSubmitQuiz} disabled={submitting} className="bg-linear-to-r from-purple-500 to-pink-500 text-white">
               <CheckCircle2 size={18} /> {submitting ? "Submitting..." : "Submit Quiz"}
             </Button>
           )}
