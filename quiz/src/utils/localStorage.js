@@ -38,7 +38,7 @@ export function deleteDocument(id) {
   localStorage.setItem(STORAGE_KEYS.QUIZZES, JSON.stringify(quizzes));
 }
 
-// Get all quizzes from localStorage
+// Get all quizzes from localStocarage
 export function getQuizzes() {
   const data = localStorage.getItem(STORAGE_KEYS.QUIZZES);
   return data ? JSON.parse(data) : [];
@@ -54,6 +54,7 @@ export function saveQuiz(quiz) {
     questions: quiz.questions,
     score: quiz.score,
     totalQuestions: quiz.totalQuestions,
+    difficulty: quiz.difficulty || 'medium', // easy, medium, hard
     completedAt: new Date().toISOString(),
   };
   quizzes.push(newQuiz);
