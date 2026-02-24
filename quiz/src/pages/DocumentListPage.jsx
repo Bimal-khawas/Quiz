@@ -132,7 +132,7 @@ const DocumentListPage = () => {
             <Button onClick={toggleTheme} className="rounded-full p-3">
               {isDark ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} className="text-purple-600" />}
             </Button>
-            <Button onClick={() => setIsUploadModalOpen(true)} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+            <Button onClick={() => setIsUploadModalOpen(true)} className="bg-linear-to-r from-purple-500 to-pink-500 text-white">
               <Plus size={18} /> Upload Document
             </Button>
           </div>
@@ -144,7 +144,7 @@ const DocumentListPage = () => {
             title="No documents yet"
             description="Upload your first PDF document to get started. You can then generate quizzes to test your understanding."
             action={
-              <Button onClick={() => setIsUploadModalOpen(true)} className="mt-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+              <Button onClick={() => setIsUploadModalOpen(true)} className="mt-4 bg-linear-to-r from-purple-500 to-pink-500 text-white">
                 <Upload size={18} /> Upload Document
               </Button>
             }
@@ -160,11 +160,11 @@ const DocumentListPage = () => {
                 {/* Document Card Content */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br ${isDark ? 'from-purple-500 to-pink-500' : 'from-blue-500 to-cyan-500'}`}>
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-linear-to-br ${isDark ? 'from-purple-500 to-pink-500' : 'from-blue-500 to-cyan-500'}`}>
                       <FileText className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className={`font-semibold ${colors.text} truncate max-w-[180px] group-hover:text-purple-500 transition-colors`}>
+                      <h3 className={`font-semibold ${colors.text} truncate max-w-45 group-hover:text-purple-500 transition-colors`}>
                         {doc.name}
                       </h3>
                       <p className={`text-sm ${colors.textMuted}`}>{formatFileSize(doc.size)}</p>
@@ -227,7 +227,7 @@ const DocumentListPage = () => {
                     className={`w-full border ${colors.border} ${colors.bgSecondary} p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500`}
                   />
                 </div>
-                <Button type="submit" disabled={uploading} className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3">
+                <Button type="submit" disabled={uploading} className="w-full bg-linear-to-r from-purple-500 to-pink-500 text-white py-3">
                   {uploading ? 'Uploading...' : <>Upload <Upload size={18} /></>}
                 </Button>
               </form>
