@@ -35,11 +35,11 @@ const DocumentCard = ({ document, onDelete }) => {
       {/* Document Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br ${isDark ? 'from-purple-500 to-pink-500' : 'from-blue-500 to-cyan-500'}`}>
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-linear-to-br ${isDark ? 'from-purple-500 to-pink-500' : 'from-blue-500 to-cyan-500'}`}>
             <FileText className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className={`font-semibold ${colors.text} truncate max-w-[180px] group-hover:text-purple-500 transition-colors`}>
+            <h3 className={`font-semibold ${colors.text} truncate max-w-45 group-hover:text-purple-500 transition-colors`}>
               {document.name}
             </h3>
             <p className={`text-sm ${colors.textMuted}`}>{formatFileSize(document.size)}</p>
@@ -62,7 +62,7 @@ const DocumentCard = ({ document, onDelete }) => {
       <div className="flex gap-2">
         <Link
           to={`/documents/${document.id}`}
-          className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-center py-2.5 px-4 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-200 text-sm font-medium hover:scale-[1.02]"
+          className="flex-1 bg-linear-to-r from-purple-500 to-pink-500 text-white text-center py-2.5 px-4 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-200 text-sm font-medium hover:scale-[1.02]"
         >
           View Document
         </Link>
