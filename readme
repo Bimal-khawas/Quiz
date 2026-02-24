@@ -1,1 +1,22 @@
-A sub function for studyhive, a quiz application
+PDF File → extractTextFromPdf → Plain Text → saveDocument → localStorage
+                                    ↓
+                          Document {id, name, text, pdfData, ...}
+                                    ↓
+                          generateQuizFromText → Gemini API
+                                    ↓
+                          parseQuizText → Questions Array
+                                    ↓
+                          saveQuiz → localStorage
+                                    ↓
+                          Quiz {id, questions[], score, difficulty, ...}
+                                    ↓
+                          QuizTakePage → User answers
+                                    ↓
+                          handleSubmitQuiz → Compare answers
+                                    ↓
+                          Updated Quiz + userAnswers → localStorage
+                                    ↓
+                          QuizResultPage → Display results with all options
+
+
+
