@@ -102,7 +102,7 @@ const DocumentUploadPage = () => {
             <Button 
               type="submit" 
               disabled={uploading || !file}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3"
+              className="w-full bg-linear-to-r from-purple-500 to-pink-500 text-white py-3"
             >
               {uploading ? (
                 <>Uploading...</>
