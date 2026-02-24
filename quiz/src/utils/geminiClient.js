@@ -4,16 +4,19 @@
  * Generate quiz questions from text using Gemini API
  * @param {string} text - The text content to generate quiz from
  * @param {number} numQuestions - Number of questions to generate
+ * @param {string} difficulty - Difficulty level: 'easy', 'medium', 'hard'
  * @returns {Promise<Array>} - Array of quiz questions with explanations
  */
-export async function generateQuizFromText(text, numQuestions = 5) {
+export async function generateQuizFromText(text, numQuestions = 5, difficulty = 'medium') {
   // Get API key from environment variable
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   
   if (!apiKey) {
-    // Return mock questions for demo purposes when no API key is provided
-    return generateSmartMockQuestions(text, numQuestions);
+    throw new Error("Gemini API key not found. Please add VITE_GEMINI_API_KEY to your .env file.");
   }
+
+  // Build difficulty-specific prompt
+  const difficultyPrompt = getDifficultyPrompt(difficulty);
 
   try {
     const response = await fetch(
@@ -27,6 +30,8 @@ export async function generateQuizFromText(text, numQuestions = 5) {
               parts: [
                 {
                   text: `Generate ${numQuestions} high-quality multiple-choice quiz questions from the following text.
+                  
+                  ${difficultyPrompt}
                   
                   Requirements:
                   1. Focus on IMPORTANT TOPICS and KEY CONCEPTS from the text
@@ -60,11 +65,44 @@ export async function generateQuizFromText(text, numQuestions = 5) {
 
     // Parse Gemini response into quiz format
     const quizText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    return parseQuizText(quizText, numQuestions);
+    const questions = parseQuizText(quizText, numQuestions);
+    
+    if (questions.length === 0) {
+      throw new Error("Failed to generate questions. Please try again.");
+    }
+    
+    return questions;
   } catch (error) {
     console.error("Gemini API error:", error);
-    // Fall back to mock questions on error
-    return generateSmartMockQuestions(text, numQuestions);
+    throw new Error(error.message || "Failed to generate quiz questions. Please check your API key and try again.");
+  }
+}
+
+/**
+ * Get difficulty-specific prompt based on difficulty level
+ */
+function getDifficultyPrompt(difficulty) {
+  switch (difficulty) {
+    case 'easy':
+      return `DIFFICULTY: EASY
+      - Create straightforward questions that test basic recall and understanding
+      - Questions should focus on facts, definitions, and straightforward concepts
+      - Options should be clearly distinguishable
+      - Explanations should be simple and direct`;
+    case 'hard':
+      return `DIFFICULTY: HARD
+      - Create complex questions that test analysis, synthesis, and critical thinking
+      - Questions should require deeper understanding and application of concepts
+      - Include questions that compare/contrast, analyze cause-effect, or evaluate scenarios
+      - Options may be similar and require careful analysis
+      - Explanations should be detailed and show the reasoning process`;
+    case 'medium':
+    default:
+      return `DIFFICULTY: MEDIUM
+      - Create questions that test understanding and application of concepts
+      - Questions should go beyond basic recall to test comprehension
+      - Include some application-based and scenario-based questions
+      - Explanations should clarify the reasoning behind the answer`;
   }
 }
 
@@ -113,91 +151,5 @@ function parseQuizText(quizText, maxQuestions) {
 
   if (currentQuestion) questions.push(currentQuestion);
 
-  // If parsing failed, generate smart mock questions
-  if (questions.length === 0) {
-    return generateSmartMockQuestions("", maxQuestions);
-  }
-
   return questions.slice(0, maxQuestions);
-}
-
-/**
- * Generate smart mock questions based on text content when no API key is available
- */
-function generateSmartMockQuestions(text, numQuestions) {
-  // Extract potential topics from text (simple keyword extraction)
-  const words = text.toLowerCase().split(/\s+/).filter(w => w.length > 5);
-  const wordFreq = {};
-  words.forEach(word => {
-    wordFreq[word] = (wordFreq[word] || 0) + 1;
-  });
-  const topWords = Object.entries(wordFreq)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([word]) => word);
-
-  const smartQuestions = [
-    {
-      question: `What is the main topic discussed in the document${topWords.length > 0 ? ` related to "${topWords[0]}"` : ''}?`,
-      options: [
-        `The document primarily discusses ${topWords[0] || 'the main subject'}`,
-        `A completely unrelated topic`,
-        `Something about cooking recipes`,
-        `Entertainment and sports`
-      ],
-      answer: `The document primarily discusses ${topWords[0] || 'the main subject'}`,
-      correctAnswer: "A",
-      explanation: "The document's content clearly focuses on the main subject matter, which is the central theme throughout the text."
-    },
-    {
-      question: "Based on the important concepts in the text, what can be inferred?",
-      options: [
-        "The text presents key information and concepts",
-        "The content is purely fictional",
-        "There are no important points in the text",
-        "The document is about random topics"
-      ],
-      answer: "The text presents key information and concepts",
-      correctAnswer: "A",
-      explanation: "The document contains substantial information with important concepts that are worth understanding and remembering."
-    },
-    {
-      question: "What type of questions would best test understanding of this document?",
-      options: [
-        "Questions about the main ideas and key details",
-        "Questions about unrelated topics",
-        "Questions with no correct answers",
-        "Random trivia questions"
-      ],
-      answer: "Questions about the main ideas and key details",
-      correctAnswer: "A",
-      explanation: "Effective quiz questions should focus on the main ideas, key details, and important concepts presented in the document."
-    },
-    {
-      question: "What is essential for understanding this document's message?",
-      options: [
-        "Reading and comprehending the key points",
-        "Ignoring the content entirely",
-        "Skipping the introduction",
-        "Only looking at pictures"
-      ],
-      answer: "Reading and comprehending the key points",
-      correctAnswer: "A",
-      explanation: "Understanding any document requires careful reading and comprehension of its key points and main ideas."
-    },
-    {
-      question: "How should one approach learning from this document?",
-      options: [
-        "Focus on understanding the important concepts",
-        "Memorize everything without understanding",
-        "Read only the first sentence",
-        "Skim without attention"
-      ],
-      answer: "Focus on understanding the important concepts",
-      correctAnswer: "A",
-      explanation: "True learning comes from understanding and internalizing the important concepts, not just superficial reading."
-    }
-  ];
-
-  return smartQuestions.slice(0, numQuestions);
 }
